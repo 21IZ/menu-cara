@@ -25,17 +25,18 @@ function AdminPanel() {
   const handleImageUpload = async (file) => {
     const formData = new FormData();
     formData.append('file', file);
-
+  
     try {
       const response = await fetch('/api/uploadImage', {
         method: 'POST',
         body: formData,
       });
-
+  
       if (!response.ok) {
-        throw new Error('Error al subir la imagen');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Error al subir la imagen');
       }
-
+  
       const data = await response.json();
       return data.url;
     } catch (error) {
