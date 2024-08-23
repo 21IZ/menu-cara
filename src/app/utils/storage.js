@@ -3,13 +3,6 @@ import { put, del } from '@vercel/blob';
 
 console.log('NEXT_PUBLIC_KV_REST_API_URL:', process.env.NEXT_PUBLIC_KV_REST_API_URL);
 console.log('NEXT_PUBLIC_KV_REST_API_TOKEN:', process.env.NEXT_PUBLIC_KV_REST_API_TOKEN);
-console.log('NEXT_PUBLIC_KV_URL:', process.env.NEXT_PUBLIC_KV_URL);
-
-// Configure @vercel/kv to use the environment variables
-kv.config({
-  url: process.env.NEXT_PUBLIC_KV_REST_API_URL,
-  token: process.env.NEXT_PUBLIC_KV_REST_API_TOKEN,
-});
 
 export async function getMenuItems() {
   try {
