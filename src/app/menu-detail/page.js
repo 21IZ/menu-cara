@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import Card from '../components/Card';
-import { getMenuItems } from '../api/menuItems/storage';
 
 export default function Menu() {
   const [menuItems, setMenuItems] = useState([]);
@@ -13,7 +12,11 @@ export default function Menu() {
     async function fetchMenuItems() {
       try {
         setLoading(true);
-        const data = await getMenuItems();
+        const response = await fetch('/api/menuItems/route'); // Cambia a la ruta correcta de tu API
+        if (!response.ok) {
+          throw new Error('Error fetching the menu items');
+        }
+        const data = await response.json();
         setMenuItems(data);
       } catch (error) {
         console.error('Error fetching the menu items', error);
