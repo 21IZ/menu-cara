@@ -1,10 +1,9 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useMenuContext } from '../context/MenuContext';
+import { useMenuContext } from '../context/MenuContext'; // Asegúrate de que esta ruta sea correcta
+import Link from 'next/link';
 
 function MenuDetail() {
   const { selectedItem } = useMenuContext();
-  const navigate = useNavigate();
 
   if (!selectedItem) return <div>No se ha seleccionado ningún ítem</div>;
 
@@ -16,7 +15,9 @@ function MenuDetail() {
       <h1 className="menu-detail-title">{titulo}</h1>
       <p className="menu-detail-price" style={{ color: 'red' }}>${precio}</p>
       <p className="menu-detail-description">{descripcion}</p>
-      <button onClick={() => navigate('/menu')}>Volver al Menú</button>
+      <Link href="/menu">
+        <a>Volver al Menú</a>
+      </Link>
     </div>
   );
 }

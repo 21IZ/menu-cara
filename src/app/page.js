@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Card from '../components/Card';
+import Card from './components/Card';
 
 export default function Menu() {
   const [menuItems, setMenuItems] = useState([]);
