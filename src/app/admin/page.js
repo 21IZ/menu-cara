@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect } from 'react';
 import { getMenuItems, addMenuItem, updateMenuItem, deleteMenuItem } from '../utils/storage';
 
