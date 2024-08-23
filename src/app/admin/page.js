@@ -1,7 +1,6 @@
-"use client";
+'use client';
 
 import React, { useState, useEffect } from 'react';
-import { getMenuItems, addMenuItem, updateMenuItem, deleteMenuItem } from '../api/menuItems/route';
 
 function AdminPanel() {
   const [menuItems, setMenuItems] = useState([]);
@@ -15,7 +14,11 @@ function AdminPanel() {
 
   async function fetchMenuItems() {
     try {
-      const data = await getMenuItems();
+      const response = await fetch('/api/menuItems');
+      if (!response.ok) {
+        throw new Error('Error al obtener los ítems del menú');
+      }
+      const data = await response.json();
       setMenuItems(data);
     } catch (error) {
       console.error('Error al obtener los ítems del menú', error);
@@ -54,8 +57,16 @@ function AdminPanel() {
     try {
       const imageUrl = await handleImageUpload(newItem.imagen);
       const newItemWithImage = { ...newItem, imagen: imageUrl, id: Date.now().toString() };
-      await addMenuItem(newItemWithImage);
-      setMenuItems([...menuItems, newItemWithImage]);
+      const response = await fetch('/api/menuItems', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newItemWithImage),
+      });
+      if (!response.ok) {
+        throw new Error('Error al agregar el ítem');
+      }
+      const addedItem = await response.json();
+      setMenuItems([...menuItems, addedItem]);
       setNewItem({ nombre: '', descripcion: '', precio: '', imagen: null });
       setPreviewImage('');
     } catch (error) {
@@ -76,9 +87,16 @@ function AdminPanel() {
       }
 
       const updatedItem = { ...editingItem, imagen: imageUrl };
-      const index = menuItems.findIndex(item => item.id === updatedItem.id);
-      await updateMenuItem(index, updatedItem);
-      setMenuItems(menuItems.map(item => item.id === updatedItem.id ? updatedItem : item));
+      const response = await fetch(`/api/menuItems/${updatedItem.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedItem),
+      });
+      if (!response.ok) {
+        throw new Error('Error al guardar la edición');
+      }
+      const updated = await response.json();
+      setMenuItems(menuItems.map(item => item.id === updated.id ? updated : item));
       setEditingItem(null);
       setPreviewImage('');
     } catch (error) {
@@ -88,8 +106,12 @@ function AdminPanel() {
 
   const handleDelete = async (id) => {
     try {
-      const index = menuItems.findIndex(item => item.id === id);
-      await deleteMenuItem(index);
+      const response = await fetch(`/api/menuItems/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) {
+        throw new Error('Error al eliminar el ítem');
+      }
       setMenuItems(menuItems.filter(item => item.id !== id));
     } catch (error) {
       console.error('Error al eliminar el elemento', error);
@@ -117,7 +139,7 @@ function AdminPanel() {
               <span className='product-price'>${item.precio}</span>
               <br />
               <span className='product-description'>
-                {item.descripcion.length > 50 ? `${item.descripcion.substring(0, 20)}...` : item.descripcion}
+                {item.descripcion.length > 50 ? `${item.descripcion.substring(0, 50)}...` : item.descripcion}
               </span>
               <div className='product-buttons'>
                 <button onClick={() => handleEdit(item)}>Editar</button>

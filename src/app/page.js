@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import Card from './components/Card';
-import { getMenuItems } from './api/menuItems/route';
+import Card from '../components/Card';
 
 export default function Menu() {
   const [menuItems, setMenuItems] = useState([]);
@@ -13,7 +12,11 @@ export default function Menu() {
     async function fetchMenuItems() {
       try {
         setLoading(true);
-        const data = await getMenuItems();
+        const response = await fetch('/api/menuItems');
+        if (!response.ok) {
+          throw new Error('Error al cargar los ítems del menú');
+        }
+        const data = await response.json();
         setMenuItems(data);
       } catch (error) {
         console.error('Error fetching the menu items', error);
