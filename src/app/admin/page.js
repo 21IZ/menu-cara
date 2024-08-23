@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import { getMenuItems, addMenuItem, updateMenuItem, deleteMenuItem } from '../api/menuItems/route';
 
 function AdminPanel() {
   const [menuItems, setMenuItems] = useState([]);
@@ -14,8 +15,7 @@ function AdminPanel() {
 
   async function fetchMenuItems() {
     try {
-      const response = await fetch('/api/route');
-      const data = await response.json();
+      const data = await getMenuItems();
       setMenuItems(data);
     } catch (error) {
       console.error('Error al obtener los ítems del menú', error);
@@ -54,15 +54,8 @@ function AdminPanel() {
     try {
       const imageUrl = await handleImageUpload(newItem.imagen);
       const newItemWithImage = { ...newItem, imagen: imageUrl, id: Date.now().toString() };
-      const response = await fetch('/api/route', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newItemWithImage),
-      });
-      const addedItem = await response.json();
-      setMenuItems([...menuItems, addedItem]);
+      await addMenuItem(newItemWithImage);
+      setMenuItems([...menuItems, newItemWithImage]);
       setNewItem({ nombre: '', descripcion: '', precio: '', imagen: null });
       setPreviewImage('');
     } catch (error) {
@@ -83,15 +76,9 @@ function AdminPanel() {
       }
 
       const updatedItem = { ...editingItem, imagen: imageUrl };
-      const response = await fetch('/api/route', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ id: updatedItem.id, updatedItem }),
-      });
-      const savedItem = await response.json();
-      setMenuItems(menuItems.map(item => item.id === updatedItem.id ? savedItem : item));
+      const index = menuItems.findIndex(item => item.id === updatedItem.id);
+      await updateMenuItem(index, updatedItem);
+      setMenuItems(menuItems.map(item => item.id === updatedItem.id ? updatedItem : item));
       setEditingItem(null);
       setPreviewImage('');
     } catch (error) {
@@ -101,13 +88,8 @@ function AdminPanel() {
 
   const handleDelete = async (id) => {
     try {
-      await fetch('/api/route', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ deleteId: id }),
-      });
+      const index = menuItems.findIndex(item => item.id === id);
+      await deleteMenuItem(index);
       setMenuItems(menuItems.filter(item => item.id !== id));
     } catch (error) {
       console.error('Error al eliminar el elemento', error);
