@@ -17,7 +17,6 @@ body {
   transition: all 0.3s ease;
   text-decoration: none;
   color: inherit;
-  justify-content: center;
   max-width: 90%;
   height: 130px;
   margin: 0 auto;
@@ -29,8 +28,14 @@ body {
   box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-.card img {
+.card-image-container {
   width: 50%;
+  height: 100%;
+}
+
+.card-image {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
 }
 
@@ -39,6 +44,7 @@ body {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
 .card-title {
@@ -49,8 +55,18 @@ body {
   text-align: left;
 }
 
+.card-description {
+  font-size: 0.9em;
+  color: #7f8c8d;
+  margin: 5px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
 .card-price {
-  position: static;
   font-weight: bold;
   color: white;
   background-color: #e74c3c;
@@ -62,12 +78,6 @@ body {
   margin-bottom: 0;
   font-size: 1.4rem;
   text-shadow: none;
-}
-
-.card-description {
-  font-size: 0.9em;
-  color: #7f8c8d;
-  margin: 0;
 }
 
 /* Estilos del menú */
