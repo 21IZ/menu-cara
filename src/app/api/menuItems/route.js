@@ -13,6 +13,7 @@ async function addMenuItem(item) {
   const items = await getMenuItems();
   items.push(item);
   await setMenuItems(items);
+  return item;  // Return the added item
 }
 
 async function updateMenuItem(index, updatedItem) {
@@ -45,16 +46,21 @@ export async function GET() {
 
 export async function POST(request) {
   try {
-    const { item } = await request.json();
-    await addMenuItem(item);
-    return new Response(JSON.stringify(item), {
+    const item = await request.json();
+    if (!item || typeof item !== 'object') {
+      throw new Error('Invalid item data');
+    }
+    
+    const addedItem = await addMenuItem(item);
+    
+    return new Response(JSON.stringify(addedItem), {
       status: 201,
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Error adding menu item:', error);
-    return new Response(JSON.stringify({ error: 'Error adding menu item' }), {
-      status: 500,
+    return new Response(JSON.stringify({ error: 'Error adding menu item', details: error.message }), {
+      status: 400,
       headers: { 'Content-Type': 'application/json' },
     });
   }

@@ -65,15 +65,21 @@ function AdminPanel() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(newItemWithImage),
       });
+
       if (!response.ok) {
-        throw new Error('Error al agregar el ítem');
+        const errorData = await response.json();
+        console.error('Error response:', response.status, errorData);
+        throw new Error(`Error al agregar el ítem: ${errorData.error}. ${errorData.details || ''}`);
       }
+
       const addedItem = await response.json();
       setMenuItems([...menuItems, addedItem]);
       setNewItem({ nombre: '', descripcion: '', precio: '', imagen: null });
       setPreviewImage('');
+      alert('Ítem agregado con éxito');
     } catch (error) {
       console.error('Error al agregar el ítem:', error);
+      alert(`Error al agregar el ítem: ${error.message}`);
     }
   };
 
