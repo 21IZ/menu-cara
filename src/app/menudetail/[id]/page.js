@@ -1,12 +1,18 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useMenuContext } from '../context/MenuContext';
+import { useParams } from 'next/navigation';
+import { useMenuContext } from '../../../context/MenuContext';
 
 export default function MenuDetail() {
-  const { selectedItem } = useMenuContext();
+  const params = useParams();
+  const { getItemById } = useMenuContext();
 
-  if (!selectedItem) return <div>No item selected</div>;
+  const selectedItem = getItemById(params.id);
+
+  if (!selectedItem) return <div>Cargando...</div>;
 
   const { image, title, price, description } = selectedItem;
 
@@ -16,7 +22,7 @@ export default function MenuDetail() {
       <h1 className="menu-detail-title">{title}</h1>
       <p className="menu-detail-price" style={{ color: 'red' }}>${price}</p>
       <p className="menu-detail-description">{description}</p>
-      <Link href="/menu">
+      <Link href="/">
         <button>Volver al Menú</button>
       </Link>
     </div>

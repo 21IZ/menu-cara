@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -18,12 +20,8 @@ const Card = ({ image, title, price, description, id }) => {
             src={image} 
             alt={title} 
             width={200}
-            height={200}
+            height={130}
             className="card-image" 
-            onError={() => {
-              console.error('Image failed to load:', image);
-              // En Next.js, maneja las imágenes de respaldo de manera diferente
-            }}
           />
         )}
         <div className="card-content">
