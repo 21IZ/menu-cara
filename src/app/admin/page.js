@@ -109,6 +109,7 @@ function AdminPanel() {
       setMenuItems(menuItems.map(item => item.id === updated.id ? updated : item));
       setEditingItem(null);
       setPreviewImage('');
+      alert('Ítem actualizado con éxito');
     } catch (error) {
       console.error('Error al guardar la edición', error);
       alert(error.message);
@@ -125,6 +126,7 @@ function AdminPanel() {
         throw new Error(`Error al eliminar el ítem: ${errorData.error}. ${errorData.details || ''}`);
       }
       setMenuItems(menuItems.filter(item => item.id !== id));
+      alert('Ítem eliminado con éxito');
     } catch (error) {
       console.error('Error al eliminar el elemento', error);
       alert(error.message);

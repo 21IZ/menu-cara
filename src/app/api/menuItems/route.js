@@ -2,34 +2,28 @@ import { kv } from '@vercel/kv';
 
 // Helper functions to interact with KV storage
 async function getMenuItems() {
-  return await kv.get('menuItems') || [];
+  const items = await kv.get('menuItems');
+  return Array.isArray(items) ? items : [];
 }
 
 async function setMenuItems(items) {
   await kv.set('menuItems', items);
 }
 
-async function addMenuItem(item) {
-  const items = await getMenuItems();
-  items.push(item);
-  await setMenuItems(items);
-  return item;
-}
-
 async function updateMenuItem(id, updatedItem) {
   const items = await getMenuItems();
-  const index = items.findIndex(item => item.id === id);
+  const index = items.findIndex(item => item && item.id === id);
   if (index === -1) {
     throw new Error('Item not found');
   }
-  items[index] = { ...items[index], ...updatedItem };
+  items[index] = { ...items[index], ...updatedItem, id };  // Ensure id is preserved
   await setMenuItems(items);
   return items[index];
 }
 
 async function deleteMenuItem(id) {
   const items = await getMenuItems();
-  const index = items.findIndex(item => item.id === id);
+  const index = items.findIndex(item => item && item.id === id);
   if (index === -1) {
     throw new Error('Item not found');
   }
@@ -38,43 +32,6 @@ async function deleteMenuItem(id) {
 }
 
 // API route handlers
-export async function GET(request) {
-  try {
-    const items = await getMenuItems();
-    return new Response(JSON.stringify(items), {
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    console.error('Error fetching menu items:', error);
-    return new Response(JSON.stringify({ error: 'Error fetching menu items' }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-}
-
-export async function POST(request) {
-  try {
-    const item = await request.json();
-    if (!item || typeof item !== 'object') {
-      throw new Error('Invalid item data');
-    }
-    
-    const addedItem = await addMenuItem(item);
-    
-    return new Response(JSON.stringify(addedItem), {
-      status: 201,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  } catch (error) {
-    console.error('Error adding menu item:', error);
-    return new Response(JSON.stringify({ error: 'Error adding menu item', details: error.message }), {
-      status: 400,
-      headers: { 'Content-Type': 'application/json' },
-    });
-  }
-}
-
 export async function PUT(request) {
   try {
     const { searchParams } = new URL(request.url);
