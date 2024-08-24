@@ -9,7 +9,7 @@ export const MenuProvider = ({ children }) => {
   const [selectedItem, setSelectedItem] = useState(null);
 
   const getItemById = (id) => {
-    return menuItems.find(item => item.id.toString() === id);
+    return menuItems.find(item => item.id.toString() === id.toString());
   };
 
   return (

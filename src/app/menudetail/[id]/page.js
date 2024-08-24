@@ -4,7 +4,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { useMenuContext } from '../../context/MenuContext';
+import { useMenuContext } from '../../../context/MenuContext';
 
 export default function MenuDetail() {
   const params = useParams();

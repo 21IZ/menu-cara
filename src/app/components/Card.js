@@ -13,7 +13,7 @@ const Card = ({ image, title, price, description, id }) => {
   };
 
   return (
-    <Link href={`/menu-detail/${id}`} onClick={handleClick}>
+    <Link href={`/menu-detail/${encodeURIComponent(id)}`} onClick={handleClick}>
       <div className="card">
         {image && (
           <Image 

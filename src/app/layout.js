@@ -1,3 +1,5 @@
+'use client';
+
 import { MenuProvider } from './context/MenuContext';
 import './globals.css';
 
