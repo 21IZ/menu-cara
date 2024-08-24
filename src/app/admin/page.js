@@ -19,7 +19,10 @@ function AdminPanel() {
         throw new Error('Error al obtener los ítems del menú');
       }
       const data = await response.json();
-      setMenuItems(data);
+      console.log('Datos recibidos:', data);
+      // Filtramos los elementos null
+      const filteredData = data.filter(item => item !== null);
+      setMenuItems(filteredData);
     } catch (error) {
       console.error('Error al obtener los ítems del menú', error);
     }
@@ -130,27 +133,32 @@ function AdminPanel() {
     <div className='admin'>
       <h1>Panel de Administración</h1>
 
-      <ul className='product-list'>
-        {menuItems.map(item => (
-          <li key={item.id} className='product-item'>
-            <div className='product-info'>
-              <span className='product-name'>{item.nombre}</span>
-              <br />
-              <span className='product-price'>${item.precio}</span>
-              <br />
-              <span className='product-description'>
-                {item.descripcion.length > 50 ? `${item.descripcion.substring(0, 50)}...` : item.descripcion}
-              </span>
-              <div className='product-buttons'>
-                <button onClick={() => handleEdit(item)}>Editar</button>
-                <button onClick={() => handleDelete(item.id)}>Eliminar</button>
+      {menuItems.length === 0 ? (
+        <p>No hay ítems en el menú. Agrega algunos usando el formulario de abajo.</p>
+      ) : (
+        <ul className='product-list'>
+          {menuItems.map(item => (
+            <li key={item.id} className='product-item'>
+              <div className='product-info'>
+                <span className='product-name'>{item.nombre}</span>
+                <br />
+                <span className='product-price'>${item.precio}</span>
+                <br />
+                <span className='product-description'>
+                  {item.descripcion && item.descripcion.length > 50 
+                    ? `${item.descripcion.substring(0, 50)}...` 
+                    : item.descripcion}
+                </span>
+                <div className='product-buttons'>
+                  <button onClick={() => handleEdit(item)}>Editar</button>
+                  <button onClick={() => handleDelete(item.id)}>Eliminar</button>
+                </div>
               </div>
-            </div>
-            {item.imagen && <img src={item.imagen} alt={item.nombre} className='product-image' />}
-          </li>
-        ))}
-      </ul>
-
+              {item.imagen && <img src={item.imagen} alt={item.nombre} className='product-image' />}
+            </li>
+          ))}
+        </ul>
+      )}
       {editingItem && (
         <div className="admin-edit">
           <h2>Editar Oferta</h2>
