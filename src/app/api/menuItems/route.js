@@ -13,20 +13,30 @@ async function addMenuItem(item) {
   const items = await getMenuItems();
   items.push(item);
   await setMenuItems(items);
-  return item;  // Return the added item
+  return item;
 }
 
-async function updateMenuItem(index, updatedItem) {
+async function updateMenuItem(id, updatedItem) {
   const items = await getMenuItems();
-  items[index] = updatedItem;
+  const index = items.findIndex(item => item.id === id);
+  if (index === -1) {
+    throw new Error('Item not found');
+  }
+  items[index] = { ...items[index], ...updatedItem };
   await setMenuItems(items);
+  return items[index];
 }
 
-async function deleteMenuItem(index) {
+async function deleteMenuItem(id) {
   const items = await getMenuItems();
+  const index = items.findIndex(item => item.id === id);
+  if (index === -1) {
+    throw new Error('Item not found');
+  }
   items.splice(index, 1);
   await setMenuItems(items);
 }
+
 
 // API route handlers
 export async function GET() {
@@ -68,15 +78,20 @@ export async function POST(request) {
 
 export async function PUT(request) {
   try {
-    const { index, updatedItem } = await request.json();
-    await updateMenuItem(index, updatedItem);
-    return new Response(JSON.stringify(updatedItem), {
+    const { id, ...updatedItem } = await request.json();
+    if (!id || typeof updatedItem !== 'object') {
+      throw new Error('Invalid item data');
+    }
+    
+    const updated = await updateMenuItem(id, updatedItem);
+    
+    return new Response(JSON.stringify(updated), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Error updating menu item:', error);
-    return new Response(JSON.stringify({ error: 'Error updating menu item' }), {
-      status: 500,
+    return new Response(JSON.stringify({ error: 'Error updating menu item', details: error.message }), {
+      status: 400,
       headers: { 'Content-Type': 'application/json' },
     });
   }
@@ -84,15 +99,20 @@ export async function PUT(request) {
 
 export async function DELETE(request) {
   try {
-    const { index } = await request.json();
-    await deleteMenuItem(index);
+    const { id } = await request.json();
+    if (!id) {
+      throw new Error('Invalid item id');
+    }
+    
+    await deleteMenuItem(id);
+    
     return new Response(JSON.stringify({ success: true }), {
       headers: { 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Error deleting menu item:', error);
-    return new Response(JSON.stringify({ error: 'Error deleting menu item' }), {
-      status: 500,
+    return new Response(JSON.stringify({ error: 'Error deleting menu item', details: error.message }), {
+      status: 400,
       headers: { 'Content-Type': 'application/json' },
     });
   }
