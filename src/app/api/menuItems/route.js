@@ -37,9 +37,8 @@ async function deleteMenuItem(id) {
   await setMenuItems(items);
 }
 
-
 // API route handlers
-export async function GET() {
+export async function GET(request) {
   try {
     const items = await getMenuItems();
     return new Response(JSON.stringify(items), {
@@ -78,8 +77,14 @@ export async function POST(request) {
 
 export async function PUT(request) {
   try {
-    const { id, ...updatedItem } = await request.json();
-    if (!id || typeof updatedItem !== 'object') {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+    if (!id) {
+      throw new Error('Missing item id');
+    }
+    
+    const updatedItem = await request.json();
+    if (typeof updatedItem !== 'object') {
       throw new Error('Invalid item data');
     }
     
@@ -99,9 +104,10 @@ export async function PUT(request) {
 
 export async function DELETE(request) {
   try {
-    const { id } = await request.json();
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
     if (!id) {
-      throw new Error('Invalid item id');
+      throw new Error('Missing item id');
     }
     
     await deleteMenuItem(id);

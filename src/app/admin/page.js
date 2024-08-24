@@ -94,15 +94,16 @@ function AdminPanel() {
       if (editingItem.imagen instanceof File) {
         imageUrl = await handleImageUpload(editingItem.imagen);
       }
-
+  
       const updatedItem = { ...editingItem, imagen: imageUrl };
-      const response = await fetch(`/api/menuItems/${updatedItem.id}`, {
+      const response = await fetch(`/api/menuItems?id=${updatedItem.id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedItem),
       });
       if (!response.ok) {
-        throw new Error('Error al guardar la edición');
+        const errorData = await response.json();
+        throw new Error(`Error al guardar la edición: ${errorData.error}. ${errorData.details || ''}`);
       }
       const updated = await response.json();
       setMenuItems(menuItems.map(item => item.id === updated.id ? updated : item));
@@ -110,20 +111,23 @@ function AdminPanel() {
       setPreviewImage('');
     } catch (error) {
       console.error('Error al guardar la edición', error);
+      alert(error.message);
     }
   };
-
+  
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/api/menuItems/${id}`, {
+      const response = await fetch(`/api/menuItems?id=${id}`, {
         method: 'DELETE',
       });
       if (!response.ok) {
-        throw new Error('Error al eliminar el ítem');
+        const errorData = await response.json();
+        throw new Error(`Error al eliminar el ítem: ${errorData.error}. ${errorData.details || ''}`);
       }
       setMenuItems(menuItems.filter(item => item.id !== id));
     } catch (error) {
       console.error('Error al eliminar el elemento', error);
+      alert(error.message);
     }
   };
 
