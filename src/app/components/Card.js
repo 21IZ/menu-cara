@@ -12,6 +12,11 @@ const Card = ({ imagen, nombre, precio, descripcion, id }) => {
     setSelectedItem({ imagen, nombre, precio, descripcion, id });
   };
 
+  // Check if the item is valid before rendering
+  if (!nombre || !precio) {
+    return null; // Don't render invalid items
+  }
+
   return (
     <Link href={`/menu-detail/${encodeURIComponent(id)}`} onClick={handleClick}>
       <div className="card">
