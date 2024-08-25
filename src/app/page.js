@@ -18,8 +18,9 @@ export default function Menu() {
         }
         const data = await response.json();
         console.log('Datos recibidos:', data);
-        // Filtramos los elementos nulos
-        const filteredData = data.filter(item => item !== null);
+        // Filtramos los elementos null y undefined
+        const filteredData = data.filter(item => item !== null && item !== undefined);
+        console.log('Datos filtrados:', filteredData);
         setMenuItems(filteredData);
       } catch (error) {
         console.error('Error fetching the menu items', error);
@@ -43,7 +44,7 @@ export default function Menu() {
             <Card key={item.id} {...item} />
           ))
         ) : (
-          <div>No hay items en el menú</div>
+          <div>No hay items disponibles en el menú</div>
         )}
       </div>
     </div>
