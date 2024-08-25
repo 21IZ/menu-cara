@@ -41,16 +41,15 @@ export default function Menu() {
   if (loading) return <div>Cargando...</div>;
   if (error) return <div>{error}</div>;
 
-  // Comprobación adicional para asegurarnos de que menuItems es un array
-  const validMenuItems = Array.isArray(menuItems) ? menuItems : [];
+  console.log('Renderizando menú con items:', menuItems);
 
   return (
     <div className="menu">
       <h1>Menú</h1>
       <div className="menu-items">
-        {validMenuItems.length > 0 ? (
-          validMenuItems.map(item => (
-            <Card key={item.id} {...item} />
+        {menuItems.length > 0 ? (
+          menuItems.map(item => (
+            <Card key={item.id} item={item} />
           ))
         ) : (
           <div>No hay items disponibles en el menú</div>
