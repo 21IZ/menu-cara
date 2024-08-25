@@ -18,8 +18,14 @@ export default function Menu() {
         }
         const data = await response.json();
         console.log('Datos recibidos:', data);
+        
+        if (!Array.isArray(data)) {
+          console.error('Los datos recibidos no son un array:', data);
+          throw new Error('Formato de datos incorrecto');
+        }
+
         // Filtramos los elementos null y undefined
-        const filteredData = data.filter(item => item !== null && item !== undefined);
+        const filteredData = data.filter(item => item != null);
         console.log('Datos filtrados:', filteredData);
         setMenuItems(filteredData);
       } catch (error) {
@@ -35,12 +41,15 @@ export default function Menu() {
   if (loading) return <div>Cargando...</div>;
   if (error) return <div>{error}</div>;
 
+  // Comprobación adicional para asegurarnos de que menuItems es un array
+  const validMenuItems = Array.isArray(menuItems) ? menuItems : [];
+
   return (
     <div className="menu">
       <h1>Menú</h1>
       <div className="menu-items">
-        {menuItems.length > 0 ? (
-          menuItems.map(item => (
+        {validMenuItems.length > 0 ? (
+          validMenuItems.map(item => (
             <Card key={item.id} {...item} />
           ))
         ) : (
