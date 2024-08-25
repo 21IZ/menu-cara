@@ -10,7 +10,7 @@ const Card = ({ item }) => {
     return null;
   }
 
-  const { id, nombre, precio, imagen, descripcion } = item;
+  const { id, nombre, precio, imagen } = item;
 
   if (!id || !nombre || !precio) {
     console.error('Card recibió un item con propiedades faltantes:', item);
@@ -38,7 +38,6 @@ const Card = ({ item }) => {
         <div className="card-content">
           <h2 className="card-title">{nombre}</h2>
           <p className="card-price">${precio}</p>
-          {descripcion && <p className="card-description">{descripcion}</p>}
         </div>
       </div>
     </Link>

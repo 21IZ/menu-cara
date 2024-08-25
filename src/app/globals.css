@@ -24,6 +24,11 @@ body {
   flex: 1;
 }
 
+.card-link {
+  text-decoration: none; /* Elimina el subrayado */
+  color: inherit; /* Hereda el color del texto de su contenedor */
+}
+
 .card:hover {
   transform: translateY(-5px);
   box-shadow: 0 6px 12px rgba(0,0,0,0.15);
@@ -47,6 +52,9 @@ body {
   margin: 0 0 5px 0;
   font-size: 1.4em;
   text-align: left;
+  text-decoration: none; /* Asegura que no haya subrayado en estos elementos */
+  color: inherit; /* Asegura que el color del texto sea el correcto */
+  color: #333; /* Color del título */
 }
 
 .card-price {
@@ -62,12 +70,18 @@ body {
   margin-bottom: 0;
   font-size: 1.4rem;
   text-shadow: none;
+  text-decoration: none; /* Asegura que no haya subrayado en estos elementos */
+  color: inherit; /* Asegura que el color del texto sea el correcto */
+  color: #e74c3c; /* Color del precio */
 }
 
 .card-description {
   font-size: 0.9em;
   color: #7f8c8d;
   margin: 0;
+  text-decoration: none; /* Asegura que no haya subrayado en estos elementos */
+  color: inherit; /* Asegura que el color del texto sea el correcto */
+  color: #7f8c8d; /* Color de la descripción */
 }
 
 /* Estilos del menú */
