@@ -1,3 +1,5 @@
+'use client';
+
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,9 +12,13 @@ const Card = ({ menuItems }) => {
     setSelectedItem(item);
   };
 
+  if (!menuItems || menuItems.length === 0) {
+    return <p>No hay ítems disponibles en el menú.</p>;
+  }
+
   return (
     <>
-      {menuItems.map((item) => (
+      {menuItems.filter(Boolean).map((item) => (
         <Link href={`/menuDetail/${encodeURIComponent(item.id)}`} key={item.id} onClick={() => handleClick(item)} className="card-link">
           <div className="card">
             {item.imagen ? (
