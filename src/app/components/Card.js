@@ -12,13 +12,15 @@ const Card = ({ menuItems }) => {
     setSelectedItem(item);
   };
 
-  if (!menuItems || menuItems.length === 0) {
+  const validMenuItems = menuItems.filter(item => item !== null && item !== undefined);
+
+  if (validMenuItems.length === 0) {
     return <p>No hay ítems disponibles en el menú.</p>;
   }
 
   return (
     <>
-      {menuItems.filter(Boolean).map((item) => (
+      {validMenuItems.map((item) => (
         <Link href={`/menuDetail/${encodeURIComponent(item.id)}`} key={item.id} onClick={() => handleClick(item)} className="card-link">
           <div className="card">
             {item.imagen ? (
