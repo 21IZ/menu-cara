@@ -18,26 +18,29 @@ const Card = ({ imagen, nombre, precio, descripcion, id }) => {
   }
 
   return (
-    <div className="card">
-      {imagen ? (
-        <Image 
-          src={imagen} 
-          alt={nombre} 
-          width={200}
-          height={130}
-          className="card-image"
-        />
-      ) : (
-        <div className="card-image-placeholder">No image available</div>
-      )}
-      <div className="card-content">
-        <h2 className="card-title">{nombre}</h2>
-        <p className="card-price">${precio}</p>
-        <Link href={`/menu-detail/${encodeURIComponent(id)}`} onClick={handleClick}>
-          <button className="card-details-button">View Details</button>
-        </Link>
+    <Link href={`/menuDetail/${encodeURIComponent(id)}`} onClick={handleClick} className="card-link">
+      <div className="card">
+        {imagen ? (
+          <Image 
+            src={imagen} 
+            alt={nombre} 
+            width={200}
+            height={130}
+            className="card-image"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/placeholder.jpg"; // Asegúrate de tener esta imagen en tu carpeta public
+            }}
+          />
+        ) : (
+          <div className="card-image-placeholder">No image available</div>
+        )}
+        <div className="card-content">
+          <h2 className="card-title">{nombre}</h2>
+          <p className="card-price">${precio}</p>
+        </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
