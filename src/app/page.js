@@ -17,8 +17,10 @@ export default function Menu() {
           throw new Error('Error al cargar los ítems del menú');
         }
         const data = await response.json();
-        console.log('Datos recibidos:', data);  // Añadido aquí
-        setMenuItems(data);
+        console.log('Datos recibidos:', data);
+        // Filtramos los elementos nulos
+        const filteredData = data.filter(item => item !== null);
+        setMenuItems(filteredData);
       } catch (error) {
         console.error('Error fetching the menu items', error);
         setError('Error al cargar el menú. Llama a +5354547503');
@@ -36,9 +38,9 @@ export default function Menu() {
     <div className="menu">
       <h1>Menú</h1>
       <div className="menu-items">
-        {menuItems && menuItems.length > 0 ? (
+        {menuItems.length > 0 ? (
           menuItems.map(item => (
-            item && item.id ? <Card key={item.id} {...item} /> : null
+            <Card key={item.id} {...item} />
           ))
         ) : (
           <div>No hay items en el menú</div>

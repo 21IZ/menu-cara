@@ -5,28 +5,28 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useMenuContext } from '../context/MenuContext';
 
-const Card = ({ image, title, price, description, id }) => {
+const Card = ({ imagen, nombre, precio, descripcion, id }) => {
   const { setSelectedItem } = useMenuContext();
 
   const handleClick = () => {
-    setSelectedItem({ image, title, price, description, id });
+    setSelectedItem({ imagen, nombre, precio, descripcion, id });
   };
 
   return (
     <Link href={`/menu-detail/${encodeURIComponent(id)}`} onClick={handleClick}>
       <div className="card">
-        {image && (
+        {imagen && (
           <Image 
-            src={image} 
-            alt={title} 
+            src={imagen} 
+            alt={nombre} 
             width={200}
             height={130}
             className="card-image" 
           />
         )}
         <div className="card-content">
-          <h2 className="card-title">{title}</h2>
-          <p className="card-price">${price}</p>
+          <h2 className="card-title">{nombre}</h2>
+          <p className="card-price">${precio}</p>
         </div>
       </div>
     </Link>
