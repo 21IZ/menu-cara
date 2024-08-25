@@ -1,12 +1,9 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
-
-// next.config.js
-module.exports = {
+const nextConfig = {
     images: {
       domains: ['2ncxafgeihzol2jw.public.blob.vercel-storage.com'],
     },
-  }
+  };
   
-
-export default nextConfig;
+  export default nextConfig;
+  
