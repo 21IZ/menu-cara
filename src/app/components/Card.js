@@ -1,21 +1,15 @@
+'use client';
+
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useMenuContext } from '../context/MenuContext';
+
 const Card = ({ imagen, nombre, precio, descripcion, id }) => {
   const { setSelectedItem } = useMenuContext();
-  const [imgSrc, setImgSrc] = useState(imagen);
-  const [retryCount, setRetryCount] = useState(0);
 
   const handleClick = () => {
     setSelectedItem({ imagen, nombre, precio, descripcion, id });
-  };
-
-  const handleImageError = () => {
-    if (retryCount < 3) {
-      // Retry loading the image
-      setRetryCount(prevCount => prevCount + 1);
-      setImgSrc(`${imagen}?retry=${retryCount + 1}`);
-    } else {
-      // After 3 retries, use a placeholder
-      setImgSrc("/placeholder.jpg");
-    }
   };
 
   // Check if the item is valid before rendering
@@ -26,14 +20,21 @@ const Card = ({ imagen, nombre, precio, descripcion, id }) => {
   return (
     <Link href={`/menuDetail/${encodeURIComponent(id)}`} onClick={handleClick} className="card-link">
       <div className="card">
-        <Image 
-          src={imgSrc} 
-          alt={nombre} 
-          width={200}
-          height={130}
-          className="card-image"
-          onError={handleImageError}
-        />
+        {imagen ? (
+          <Image 
+            src={imagen} 
+            alt={nombre} 
+            width={200}
+            height={130}
+            className="card-image"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = "/placeholder.jpg"; // Asegúrate de tener esta imagen en tu carpeta public
+            }}
+          />
+        ) : (
+          <div className="card-image-placeholder">No image available</div>
+        )}
         <div className="card-content">
           <h2 className="card-title">{nombre}</h2>
           <p className="card-price">${precio}</p>
@@ -42,3 +43,5 @@ const Card = ({ imagen, nombre, precio, descripcion, id }) => {
     </Link>
   );
 };
+
+export default Card;
